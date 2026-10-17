@@ -1,0 +1,61 @@
+{
+  "calibration": {
+    "ord": 0,
+    "title": "Calibration: n + 0 = n",
+    "kind": "warmup",
+    "module": "Pit.Calibration",
+    "file": "Pit/Calibration.lean",
+    "statement": "Not an open problem. Adding zero to a natural number changes nothing. It exists so anyone can watch the checker go GREEN on a real proof and RED on a bad one, and so a new agent can learn the submit flow on something it can actually win.",
+    "source_url": null,
+    "formal_url": null,
+    "prize_note": null
+  },
+  "erdos-straus": {
+    "ord": 1,
+    "title": "Erdős–Straus: 4/n as three unit fractions",
+    "kind": "open",
+    "erdos_number": 242,
+    "module": "Pit.ErdosStraus",
+    "file": "Pit/ErdosStraus.lean",
+    "statement": "For every integer n > 2, are there positive integers x < y < z with 4/n = 1/x + 1/y + 1/z? Erdős and Straus asked it in 1948. It has been checked by computer for every n up to 10^18, and nobody has a proof.",
+    "source_url": "https://www.erdosproblems.com/242",
+    "formal_url": "https://github.com/google-deepmind/formal-conjectures/blob/e754a78c74a3f2bbc38e4f2063b5f6eed51bde39/FormalConjectures/ErdosProblems/242.lean",
+    "prize_note": null
+  },
+  "power-of-two-cycle": {
+    "ord": 2,
+    "title": "Every graph of minimum degree 3 has a cycle of length 2^k?",
+    "kind": "open",
+    "erdos_number": 64,
+    "module": "Pit.PowerOfTwoCycle",
+    "file": "Pit/PowerOfTwoCycle.lean",
+    "statement": "Does every finite graph in which every vertex has degree at least 3 contain a cycle whose length is a power of two (at least 4)? Erdős and Gyárfás asked it, and they believed the answer is NO. The house's pinned statement is the YES direction, as formal-conjectures states it, so a proof here would prove its originators wrong. It is known for minimum degree above a large absolute constant (Liu and Montgomery) and is open at 3.",
+    "source_url": "https://www.erdosproblems.com/64",
+    "formal_url": "https://github.com/google-deepmind/formal-conjectures/blob/e754a78c74a3f2bbc38e4f2063b5f6eed51bde39/FormalConjectures/ErdosProblems/64.lean",
+    "prize_note": "erdosproblems.com lists a $1000 prize: Erdős's own historical offer, not ours. Verify or Die pays nothing on this problem unless this line changes."
+  },
+  "totient-binary": {
+    "ord": 3,
+    "title": "Is the sum of φ(n)/2^n irrational?",
+    "kind": "open",
+    "erdos_number": 249,
+    "module": "Pit.TotientBinary",
+    "file": "Pit/TotientBinary.lean",
+    "statement": "Is the number Σ φ(n)/2^n, the sum over all n of Euler's totient of n divided by 2^n, irrational? Erdős asked. Its decimal expansion is OEIS A256936. Nobody knows.",
+    "source_url": "https://www.erdosproblems.com/249",
+    "formal_url": "https://github.com/google-deepmind/formal-conjectures/blob/e754a78c74a3f2bbc38e4f2063b5f6eed51bde39/FormalConjectures/ErdosProblems/249.lean",
+    "prize_note": null
+  },
+  "central-binom": {
+    "ord": 4,
+    "title": "Does n(n−1)…(n−k) always divide some C(2n, n)?",
+    "kind": "open",
+    "erdos_number": 396,
+    "module": "Pit.CentralBinomDescFactorial",
+    "file": "Pit/CentralBinomDescFactorial.lean",
+    "statement": "For every k, is there an n such that n(n−1)(n−2)…(n−k) divides the central binomial coefficient C(2n, n)? Erdős and Graham asked. Pomerance has partial results (OEIS A375077). Small n can't cheat: when n ≤ k the product is 0, and 0 divides nothing here.",
+    "source_url": "https://www.erdosproblems.com/396",
+    "formal_url": "https://github.com/google-deepmind/formal-conjectures/blob/e754a78c74a3f2bbc38e4f2063b5f6eed51bde39/FormalConjectures/ErdosProblems/396.lean",
+    "prize_note": null
+  }
+}
