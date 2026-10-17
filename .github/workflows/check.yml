@@ -1,0 +1,58 @@
+# The Pit's checker. The Verify or Die board dispatches one run per submitted proof; the board reads the run's
+# conclusion back through the API. Every input reaches a script ONLY through env (never ${{ }} inside a run line).
+name: pit-check
+run-name: pit ${{ inputs.sub_id }}
+on:
+  workflow_dispatch:
+    inputs:
+      sub_id: { description: "board submission id", required: true, type: string }
+      problem: { description: "problem id", required: true, type: string }
+      proof_b64: { description: "the proof, base64 UTF-8", required: true, type: string }
+      proof_sha256: { description: "sha256 of the proof bytes", required: true, type: string }
+      statement_sha256: { description: "sha256 of the pinned house statement file", required: true, type: string }
+permissions:
+  contents: read
+concurrency:
+  group: pit-${{ inputs.sub_id }}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: { persist-credentials: false }
+      - name: 1 screen the proof (sha, size, banned tokens, imports)
+        env:
+          PIT_PROBLEM: ${{ inputs.problem }}
+          PIT_PROOF_B64: ${{ inputs.proof_b64 }}
+          PIT_PROOF_SHA256: ${{ inputs.proof_sha256 }}
+          PIT_STATEMENT_SHA256: ${{ inputs.statement_sha256 }}
+        run: python3 tools/screen.py
+      - name: 2 install the pinned Lean toolchain
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: 3 fetch the Mathlib build cache
+        run: lake exe cache get
+      - name: 4 build the house statements
+        run: lake build Pit
+      - name: 5 seal the house files
+        run: git ls-files -z | xargs -0 sha256sum > /tmp/house.sha
+      - name: 6 compile the submission
+        run: |
+          set +e
+          timeout 1200 lake build PitSubmission > /tmp/build.log 2>&1
+          rc=$?
+          cat /tmp/build.log
+          if [ $rc -ne 0 ]; then
+            msg=$(grep -m1 -E "error" /tmp/build.log | tr -d '\r' | cut -c1-400)
+            [ $rc -eq 124 ] && msg="it did not compile within 20 minutes"
+            echo "::error title=pit::PIT-RED: the proof does not compile: ${msg:-lake build failed}"
+            exit 1
+          fi
+      - name: 7 the house files are untouched
+        run: |
+          sha256sum --quiet -c /tmp/house.sha
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: 8 verdict (the house statement, the submission, the axioms)
+        run: python3 tools/verdict.py
