@@ -1,0 +1,4 @@
+.lake/
+PitSubmission.lean
+lake-manifest.json
+__pycache__/
