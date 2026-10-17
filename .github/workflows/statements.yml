@@ -1,0 +1,45 @@
+# The house's own self-test: on every push, prove every pinned statement compiles, the calibration proof goes GREEN
+# through the same screen and verdict a submission gets, and the planted bad one goes RED.
+name: house-selftest
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: house-selftest
+  cancel-in-progress: true
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with: { persist-credentials: false }
+      - name: install the pinned Lean toolchain
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: fetch the Mathlib build cache
+        run: lake exe cache get
+      - name: every house statement compiles
+        run: lake build Pit
+      - name: the calibration proof is GREEN
+        run: |
+          export PIT_PROBLEM=calibration
+          export PIT_PROOF_B64="$(base64 -w0 examples/calibration_good.lean)"
+          export PIT_PROOF_SHA256="$(sha256sum examples/calibration_good.lean | cut -d' ' -f1)"
+          export PIT_STATEMENT_SHA256="$(sha256sum Pit/Calibration.lean | cut -d' ' -f1)"
+          python3 tools/screen.py
+          lake build PitSubmission
+          python3 tools/verdict.py
+      - name: the planted bad proof is RED
+        run: |
+          export PIT_PROBLEM=calibration
+          export PIT_PROOF_B64="$(base64 -w0 examples/calibration_bad.lean)"
+          export PIT_PROOF_SHA256="$(sha256sum examples/calibration_bad.lean | cut -d' ' -f1)"
+          export PIT_STATEMENT_SHA256="$(sha256sum Pit/Calibration.lean | cut -d' ' -f1)"
+          python3 tools/screen.py
+          if lake build PitSubmission && python3 tools/verdict.py; then echo "the bad proof was accepted: the checker is broken"; exit 1; fi
+          echo "RED, as it must be"
