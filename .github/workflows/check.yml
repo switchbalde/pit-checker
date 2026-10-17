@@ -56,3 +56,23 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=no)"
       - name: 8 verdict (the house statement, the submission, the axioms)
         run: python3 tools/verdict.py
+      # On a RED or a refusal, keep the screened proof and the compiler log for explain.yml, which runs after this
+      # workflow in a separate job that never compiles anything. Kept 3 days; holds nothing but the proof and Lean's output.
+      - name: 9 keep the proof and the log for the explainer
+        if: failure()
+        run: |
+          mkdir -p /tmp/pit-failure
+          cp PitSubmission.lean /tmp/pit-failure/ 2>/dev/null || true
+          cp /tmp/build.log /tmp/pit-failure/ 2>/dev/null || true
+          cp /tmp/pit_module /tmp/pit-failure/ 2>/dev/null || true
+          printf '%s\n' "$PIT_PROBLEM" > /tmp/pit-failure/problem.txt
+        env:
+          PIT_PROBLEM: ${{ inputs.problem }}
+      - name: 10 upload it
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-failure
+          path: /tmp/pit-failure
+          retention-days: 3
+          if-no-files-found: ignore
