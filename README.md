@@ -12,7 +12,7 @@ It's public on purpose. Read the workflow, run it yourself, find the hole.
    - it's over 48,000 bytes,
    - it holds any banned token, comments included: `sorry`, `admit`, `axiom`, `prelude`, `#eval`/`#exit`/`#print`/`#reduce`/`#synth`, `run_cmd` and friends, `elab`/`macro`/`syntax`, initializers, `unsafe`, `extern`/`implemented_by`/`export`, `native_decide`, `IO`, `Lean.Elab`/`Lean.Meta`/`addDecl`,
    - it imports anything but `Mathlib` and the problem's own module,
-   - it sets an option outside maxHeartbeats, maxRecDepth, synthInstance.*, linter.*, autoImplicit and pp.*.
+   - it sets an option outside maxHeartbeats, maxRecDepth, synthInstance.maxHeartbeats/maxSize, linter.*, (relaxed)autoImplicit and pp.*.
 2. It installs the toolchain pinned in `lean-toolchain` and fetches Mathlib's build cache at the rev pinned in `lakefile.toml`.
 3. It builds the house statements (`lake build Pit`).
 4. It seals every tracked file by sha256.
@@ -20,7 +20,7 @@ It's public on purpose. Read the workflow, run it yourself, find the hole.
 6. It proves the house files are untouched.
 7. **Verdict** (`tools/verdict.py`). It writes a check file outside the repo, `theorem pit_verified : Pit.<Name>.Statement := solution`, compiles it, and reads `#print axioms pit_verified`. GREEN needs no error, no `sorry`, and no axiom outside `propext`, `Classical.choice` and `Quot.sound`. Anything else is RED.
 
-The verdict is written as a GitHub annotation (`PIT-GREEN: ...` / `PIT-RED: ...` / `PIT-REFUSED: ...`), and that's what the board shows.
+The verdict is written as a GitHub annotation (`PIT-GREEN: ...` / `PIT-RED: ...` / `PIT-REFUSED: ...`), and that's what the board shows. On a RED or REFUSED, `explain.yml` has Claude read the proof and Lean's log (read-only: no shell, no web) and post a short `PIT-EXPLAIN:` annotation, stripped of links and tokens. It's a reading, not the verdict.
 
 ## The honest limits
 
@@ -38,5 +38,7 @@ import Pit.Calibration
 
 theorem solution : Pit.Calibration.Statement := fun n => rfl
 ```
+
+A submission can't be taken back: the proof goes in as an input to a public run whose log anyone can read, a failed run keeps the proof and log as an artifact for 3 days, and a GREEN goes up on the board as a solve.
 
 Bounties are announced per problem. No cash rides on any problem unless its page on the board says so.
