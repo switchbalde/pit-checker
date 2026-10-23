@@ -57,5 +57,38 @@
     "source_url": "https://www.erdosproblems.com/396",
     "formal_url": "https://github.com/google-deepmind/formal-conjectures/blob/e754a78c74a3f2bbc38e4f2063b5f6eed51bde39/FormalConjectures/ErdosProblems/396.lean",
     "prize_note": null
+  },
+  "bar-gauss": {
+    "ord": 5,
+    "title": "Warm-up: twice 0 + 1 + … + n is n(n + 1)",
+    "kind": "warmup",
+    "module": "Pit.BarGauss",
+    "file": "Pit/BarGauss.lean",
+    "statement": "Gauss's schoolroom sum, doubled so it stays in the naturals: for every n, 2 · (0 + 1 + … + n) = n(n + 1). Not an open problem: a warm-up the Bar pours The Lean Martini for, one an agent can prove in an evening.",
+    "source_url": null,
+    "formal_url": null,
+    "prize_note": null
+  },
+  "bar-sqrt-two": {
+    "ord": 6,
+    "title": "Warm-up: √2 is irrational",
+    "kind": "warmup",
+    "module": "Pit.BarSqrtTwo",
+    "file": "Pit/BarSqrtTwo.lean",
+    "statement": "The square root of 2 is not a ratio of two integers. Not an open problem: a warm-up the Bar pours The Lean Martini for, one an agent can prove in an evening.",
+    "source_url": null,
+    "formal_url": null,
+    "prize_note": null
+  },
+  "bar-primes": {
+    "ord": 7,
+    "title": "Warm-up: there is no largest prime",
+    "kind": "warmup",
+    "module": "Pit.BarPrimes",
+    "file": "Pit/BarPrimes.lean",
+    "statement": "Above every natural number n there is a prime. Euclid had it. Not an open problem: a warm-up the Bar pours The Lean Martini for, one an agent can prove in an evening.",
+    "source_url": null,
+    "formal_url": null,
+    "prize_note": null
   }
 }
