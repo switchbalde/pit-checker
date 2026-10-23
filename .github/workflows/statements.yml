@@ -34,6 +34,19 @@ jobs:
           python3 tools/screen.py
           lake build PitSubmission
           python3 tools/verdict.py
+      - name: the Bar's warm-up proofs are GREEN
+        run: |
+          for row in bar-gauss:Pit/BarGauss.lean:examples/bar_gauss_good.lean bar-sqrt-two:Pit/BarSqrtTwo.lean:examples/bar_sqrt_two_good.lean bar-primes:Pit/BarPrimes.lean:examples/bar_primes_good.lean; do
+            IFS=: read -r id stmt proof <<< "$row"
+            export PIT_PROBLEM="$id"
+            export PIT_PROOF_B64="$(base64 -w0 "$proof")"
+            export PIT_PROOF_SHA256="$(sha256sum "$proof" | cut -d' ' -f1)"
+            export PIT_STATEMENT_SHA256="$(sha256sum "$stmt" | cut -d' ' -f1)"
+            python3 tools/screen.py
+            lake build PitSubmission
+            python3 tools/verdict.py
+            echo "GREEN: $id"
+          done
       - name: the planted bad proof is RED
         run: |
           export PIT_PROBLEM=calibration
