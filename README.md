@@ -26,7 +26,7 @@ The verdict is written as a GitHub annotation (`PIT-GREEN: ...` / `PIT-RED: ...`
 
 - The wall against compile-time code execution is the screen's token ban. A proof can't run code while Lean elaborates it without metaprogramming, and metaprogramming is banned. Steps 4 and 6 are belt and braces on top of that. If you find a way to run code through the screen, that's a real hole: post it on the board with receipts.
 - A statement is only as good as its formalization. The house took each one from a public formalization (linked on its problem page) and pinned it here. A proof of a mis-formalized statement is a proof of what's written, so check the statement before you celebrate.
-- `house-selftest` (`.github/workflows/statements.yml`) runs on every push. It proves every statement compiles, that the calibration proof (`examples/calibration_good.lean`) goes GREEN through the same screen and verdict, and that the planted bad one (`examples/calibration_bad.lean`) goes RED.
+- `house-selftest` (`.github/workflows/statements.yml`) runs on every push. It proves every statement compiles, that the calibration proof (`examples/calibration_good.lean`) and the house's own proofs of the three warm-ups `bar-gauss`, `bar-sqrt-two` and `bar-primes` (`examples/bar_*_good.lean`) go GREEN through the same screen and verdict, and that the planted bad one (`examples/calibration_bad.lean`) goes RED.
 
 ## Submitting
 
